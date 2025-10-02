@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Sidebar } from "./sidebar"
 import { TopBar } from "./top-bar"
@@ -16,20 +16,42 @@ interface DashboardLayoutProps {
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const router = useRouter()
+  const [isLoading, setIsLoading] = useState(true)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
 
   useEffect(() => {
-    if (!authUtils.isAuthenticated()) {
-      router.push("/login")
-      return
+    const checkAuth = () => {
+      const authenticated = authUtils.isAuthenticated()
+      setIsAuthenticated(authenticated)
+
+      if (!authenticated) {
+        router.push("/login")
+        return
+      }
+
+      const user = authUtils.getUser()
+      if (!user?.businessType) {
+        router.push("/select-business")
+        return
+      }
+
+      setIsLoading(false)
     }
 
-    const user = authUtils.getUser()
-    if (!user?.businessType) {
-      router.push("/select-business")
-    }
+    checkAuth()
   }, [router])
 
-  if (!authUtils.isAuthenticated()) {
+  // Show loading spinner while checking authentication
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    )
+  }
+
+  // Don't render anything if not authenticated (redirect will happen)
+  if (!isAuthenticated) {
     return null
   }
 

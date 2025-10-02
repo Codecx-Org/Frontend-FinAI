@@ -1,15 +1,56 @@
+"use client"
+
 import { DashboardLayout } from "@/components/layout/dashboard-layout"
 import { StatCard } from "@/components/dashboard/stat-card"
 import { SalesChart } from "@/components/dashboard/sales-chart"
 import { LowStockAlert } from "@/components/dashboard/low-stock-alert"
 import { DollarSign, ShoppingCart, Users, Package } from "lucide-react"
+import { useEffect, useState } from "react"
 import { api } from "@/lib/api"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import type { DashboardStats, SalesData, Product } from "@/lib/types"
 
-export default async function DashboardPage() {
-  const stats = await api.getDashboardStats()
-  const salesData = await api.getSalesData()
-  const products = await api.getProducts()
+export default function DashboardPage() {
+  const [stats, setStats] = useState<DashboardStats | null>(null)
+  const [salesData, setSalesData] = useState<SalesData[]>([])
+  const [products, setProducts] = useState<Product[]>([])
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [statsData, salesDataResult, productsData] = await Promise.all([
+          api.getDashboardStats(),
+          api.getSalesData(),
+          api.getProducts(),
+        ])
+        setStats(statsData)
+        setSalesData(salesDataResult)
+        setProducts(productsData)
+      } catch (error) {
+        console.error("Failed to load dashboard data:", error)
+      }
+    }
+
+    loadData()
+  }, [])
+
+  if (!stats) {
+    return (
+      <DashboardLayout>
+        <div className="space-y-6">
+          <div className="animate-pulse">
+            <div className="h-8 bg-muted rounded w-64 mb-2"></div>
+            <div className="h-4 bg-muted rounded w-96"></div>
+          </div>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="h-32 bg-muted rounded-lg"></div>
+            ))}
+          </div>
+        </div>
+      </DashboardLayout>
+    )
+  }
 
   return (
     <DashboardLayout>

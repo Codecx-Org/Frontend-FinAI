@@ -2,7 +2,7 @@
 import Image from "next/image"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { useRouter } from "next/router"
+import { useRouter } from "next/navigation"
 import type { Product } from "@/lib/types"
 
 interface ProductCardProps {
