@@ -22,33 +22,33 @@ export default function SettingsPage() {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="business-name">Business Name</Label>
-              <Input id="business-name" placeholder="My MSME Business" defaultValue="Demo Business" />
+              <Input id="business-name" placeholder="My MSME Business" defaultValue=" " />
             </div>
             <div className="space-y-2">
               <Label htmlFor="currency">Currency</Label>
-              <Select defaultValue="usd">
+              <Select defaultValue="Ksh">
                 <SelectTrigger id="currency">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="Ksh">KSH </SelectItem>
                   <SelectItem value="usd">USD ($)</SelectItem>
-                  <SelectItem value="eur">EUR (€)</SelectItem>
+                  <SelectItem value="$">Dollars ($)</SelectItem>
                   <SelectItem value="gbp">GBP (£)</SelectItem>
-                  <SelectItem value="inr">INR (₹)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
               <Label htmlFor="region">Region</Label>
-              <Select defaultValue="us">
+              <Select defaultValue="Kenya">
                 <SelectTrigger id="region">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
+                <SelectItem value="Ksh">Kenya</SelectItem>
                   <SelectItem value="us">United States</SelectItem>
-                  <SelectItem value="eu">Europe</SelectItem>
+                  <SelectItem value="$">South Africa</SelectItem>
                   <SelectItem value="uk">United Kingdom</SelectItem>
-                  <SelectItem value="in">India</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -64,7 +64,7 @@ export default function SettingsPage() {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="api-key">API Key</Label>
-              <Input id="api-key" type="password" placeholder="••••••••••••••••" defaultValue="demo-api-key-12345" />
+              <Input id="api-key" type="password" placeholder="" defaultValue="demo-api-key-12345" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="webhook-url">Webhook URL</Label>
