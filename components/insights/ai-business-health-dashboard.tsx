@@ -149,7 +149,7 @@ export function AIBusinessHealthDashboard({ className }: AIBusinessHealthDashboa
       {
         id: 2,
         title: "Optimize Pricing Strategy",
-        description: `Your average order value is KSH ${Math.round(avgOrderValue)}. Consider dynamic pricing to increase margins.`,
+        description: `Your average order value is KSH ${Math.round(avgOrderValue)}. Consider bulk pricing to attract larger customers.`,
         impact: "Medium",
         effort: "Low",
         roi: "145%",
@@ -179,28 +179,28 @@ export function AIBusinessHealthDashboard({ className }: AIBusinessHealthDashboa
 
     return [
       {
-        metric: "Customer Acquisition Cost",
-        current: `KSH ${Math.round(cac)}`,
-        target: "KSH 500",
-        status: cac < 500 ? "good" : "warning",
-        trend: -5, // Simplified trend
-        insight: `CAC is ${cac < 500 ? 'below' : 'above'} target, indicating ${cac < 500 ? 'efficient' : 'expensive'} customer acquisition`
+        metric: "Feed Production Efficiency",
+        current: "KSH 2,500/ton",
+        target: "KSH 2,200/ton",
+        status: 2500 < 2200 ? "good" : "warning",
+        trend: -8,
+        insight: `Production cost is ${2500 < 2200 ? 'below' : 'above'} target, indicating ${2500 < 2200 ? 'efficient' : 'expensive'} manufacturing`
       },
       {
         metric: "Customer Lifetime Value",
         current: `KSH ${Math.round(clv)}`,
-        target: "KSH 2,000",
-        status: clv > 2000 ? "good" : "warning",
-        trend: 8,
-        insight: `LTV is ${clv > 2000 ? 'above' : 'below'} target, showing ${clv > 2000 ? 'strong' : 'room for improvement in'} customer retention`
+        target: "KSH 15,000",
+        status: clv > 15000 ? "good" : "warning",
+        trend: 12,
+        insight: `LTV is ${clv > 15000 ? 'above' : 'below'} target, showing ${clv > 15000 ? 'strong' : 'room for improvement in'} customer retention`
       },
       {
         metric: "Inventory Turnover",
         current: `${turnoverRate.toFixed(1)}x`,
-        target: "6.0x",
-        status: turnoverRate > 6 ? "good" : "warning",
-        trend: 3,
-        insight: `Turnover rate is ${turnoverRate > 6 ? 'healthy' : 'low'}, indicating ${turnoverRate > 6 ? 'good' : 'slow'} inventory movement`
+        target: "8.0x",
+        status: turnoverRate > 8 ? "good" : "warning",
+        trend: 5,
+        insight: `Turnover rate is ${turnoverRate > 8 ? 'healthy' : 'low'}, indicating ${turnoverRate > 8 ? 'good' : 'slow'} inventory movement`
       }
     ]
   }

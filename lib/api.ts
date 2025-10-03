@@ -1,6 +1,8 @@
 // Mock API layer simulating Medusa.js-style endpoints
 
-import type { User, AuthResponse, Product, Order, Customer, DashboardStats, SalesData, PaymentMethod, MicroloanApplication, CreditScore } from "./types"
+import type { User, AuthResponse, Product, Order, Customer, DashboardStats, SalesData, PaymentMethod, MicroloanApplication, CreditScore, BusinessType } from "./types"
+import { authUtils } from "./auth"
+import { BUSINESS_TYPES } from "./types"
 
 // Mock authentication token
 const MOCK_TOKEN = "mock-jwt-token-12345"
@@ -13,6 +15,7 @@ const MOCK_USERS = [
     password: "pass123",
     name: "John Doe",
     role: "admin" as const,
+    businessType: "animal-feeds",
     createdAt: "2024-01-01T00:00:00Z",
   },
   {
@@ -21,63 +24,89 @@ const MOCK_USERS = [
     password: "demo123",
     name: "Jane Smith",
     role: "user" as const,
+    businessType: "animal-feeds",
     createdAt: "2024-01-15T00:00:00Z",
   },
 ]
 
 // Mock data generators
-const generateMockProducts = (): Product[] => [
-  {
-    id: "1",
-    name: "Premium Wireless Headphones",
-    description: "High-quality noise-cancelling headphones",
-    price: 299.99,
-    stock: 45,
-    category: "Electronics",
-    image: "/wireless-headphones.png",
-    createdAt: "2024-01-01T00:00:00Z",
-  },
-  {
-    id: "2",
-    name: "Smart Watch Pro",
-    description: "Advanced fitness tracking smartwatch",
-    price: 399.99,
-    stock: 12,
-    category: "Electronics",
-    image: "/smartwatch-lifestyle.png",
-    createdAt: "2024-01-05T00:00:00Z",
-  },
-  {
-    id: "3",
-    name: "Laptop Stand",
-    description: "Ergonomic aluminum laptop stand",
-    price: 49.99,
-    stock: 8,
-    category: "Accessories",
-    image: "/laptop-stand.png",
-    createdAt: "2024-01-10T00:00:00Z",
-  },
-  {
-    id: "4",
-    name: "Mechanical Keyboard",
-    description: "RGB backlit mechanical gaming keyboard",
-    price: 149.99,
-    stock: 67,
-    category: "Electronics",
-    image: "/mechanical-keyboard.png",
-    createdAt: "2024-01-12T00:00:00Z",
-  },
-  {
-    id: "5",
-    name: "USB-C Hub",
-    description: "7-in-1 USB-C multiport adapter",
-    price: 59.99,
-    stock: 3,
-    category: "Accessories",
-    image: "/usb-hub.png",
-    createdAt: "2024-01-15T00:00:00Z",
-  },
-]
+const generateMockProducts = (): Product[] => {
+  const currentUser = authUtils.getUser()
+  const businessType = currentUser?.businessType || "animal-feeds"
+
+  // Get categories for the selected business type
+  const businessTypeData = BUSINESS_TYPES.find((bt: BusinessType) => bt.id === businessType)
+  const categories = businessTypeData?.categories || ["Cattle Feed", "Poultry Feed", "Pet Food"]
+
+  if (businessType === "animal-feeds") {
+    return [
+      {
+        id: "1",
+        name: "Premium Cattle Feed",
+        description: "High-quality protein-rich cattle feed for optimal growth",
+        price: 2500.00,
+        stock: 45,
+        category: "Cattle Feed",
+        image: "/animal-feed-1.png",
+        createdAt: "2024-01-01T00:00:00Z",
+      },
+      {
+        id: "2",
+        name: "Layer Poultry Feed",
+        description: "Complete feed for egg-laying chickens with essential nutrients",
+        price: 1800.00,
+        stock: 12,
+        category: "Poultry Feed",
+        image: "/animal-feed-2.png",
+        createdAt: "2024-01-05T00:00:00Z",
+      },
+      {
+        id: "3",
+        name: "Fish Meal Supplement",
+        description: "High-protein fish meal for livestock nutrition",
+        price: 3200.00,
+        stock: 8,
+        category: "Supplements",
+        image: "/animal-feed-3.png",
+        createdAt: "2024-01-10T00:00:00Z",
+      },
+      {
+        id: "4",
+        name: "Mineral Mix for Cattle",
+        description: "Essential minerals and vitamins for cattle health",
+        price: 950.00,
+        stock: 67,
+        category: "Minerals",
+        image: "/animal-feed-4.png",
+        createdAt: "2024-01-12T00:00:00Z",
+      },
+      {
+        id: "5",
+        name: "Premium Dog Food",
+        description: "Complete nutrition for adult dogs",
+        price: 4200.00,
+        stock: 3,
+        category: "Pet Food",
+        image: "/animal-feed-5.png",
+        createdAt: "2024-01-15T00:00:00Z",
+      },
+    ]
+  }
+
+  // Default fallback for other business types
+  return [
+    {
+      id: "1",
+      name: "Sample Product 1",
+      description: "Sample product for " + businessType,
+      price: 100.00,
+      stock: 10,
+      category: categories[0] || "General",
+      image: "/placeholder.png",
+      createdAt: "2024-01-01T00:00:00Z",
+    }
+  ]
+}
 
 const generateMockOrders = (): Order[] => [
   {
@@ -85,8 +114,8 @@ const generateMockOrders = (): Order[] => [
     customerId: "CUST-001",
     customerName: "Alice Johnson",
     customerEmail: "alice@example.com",
-    items: [{ productId: "1", productName: "Premium Wireless Headphones", quantity: 1, price: 299.99 }],
-    total: 299.99,
+    items: [{ productId: "1", productName: "Premium Cattle Feed", quantity: 2, price: 2500.00 }],
+    total: 5000.00,
     status: "delivered",
     createdAt: "2024-09-15T10:30:00Z",
     updatedAt: "2024-09-20T14:20:00Z",
@@ -97,10 +126,10 @@ const generateMockOrders = (): Order[] => [
     customerName: "Bob Smith",
     customerEmail: "bob@example.com",
     items: [
-      { productId: "2", productName: "Smart Watch Pro", quantity: 1, price: 399.99 },
-      { productId: "3", productName: "Laptop Stand", quantity: 2, price: 49.99 },
+      { productId: "2", productName: "Layer Poultry Feed", quantity: 3, price: 1800.00 },
+      { productId: "4", productName: "Mineral Mix for Cattle", quantity: 1, price: 950.00 },
     ],
-    total: 499.97,
+    total: 6350.00,
     status: "shipped",
     createdAt: "2024-09-25T14:15:00Z",
     updatedAt: "2024-09-26T09:00:00Z",
@@ -110,8 +139,8 @@ const generateMockOrders = (): Order[] => [
     customerId: "CUST-003",
     customerName: "Carol White",
     customerEmail: "carol@example.com",
-    items: [{ productId: "4", productName: "Mechanical Keyboard", quantity: 1, price: 149.99 }],
-    total: 149.99,
+    items: [{ productId: "5", productName: "Premium Dog Food", quantity: 2, price: 4200.00 }],
+    total: 8400.00,
     status: "processing",
     createdAt: "2024-09-28T16:45:00Z",
     updatedAt: "2024-09-28T16:45:00Z",
@@ -170,8 +199,84 @@ const generateMockSalesData = (): SalesData[] => {
 
 const getStoredProducts = (): Product[] => {
   if (typeof window === "undefined") return []
+
   const stored = localStorage.getItem("products")
-  return stored ? JSON.parse(stored) : []
+  const currentUser = authUtils.getUser()
+  const businessType = currentUser?.businessType || "animal-feeds"
+
+  // If products exist in storage, return them (don't override with mock data)
+  if (stored) {
+    try {
+      const existingProducts = JSON.parse(stored)
+      if (existingProducts && existingProducts.length > 0) {
+        return existingProducts
+      }
+    } catch (error) {
+      console.error("Error parsing stored products:", error)
+    }
+  }
+
+  // Only generate animal feeds products if no products exist and business type is animal-feeds
+  if (businessType === "animal-feeds") {
+    const animalFeedsProducts = [
+      {
+        id: "1",
+        name: "Premium Cattle Feed",
+        description: "High-quality protein-rich cattle feed for optimal growth and health",
+        price: 2500.00,
+        stock: 45,
+        category: "Cattle Feed",
+        image: "CF",
+        createdAt: "2024-01-01T00:00:00Z",
+      },
+      {
+        id: "2",
+        name: "Layer Poultry Feed",
+        description: "Complete balanced feed for egg-laying chickens with essential nutrients",
+        price: 1800.00,
+        stock: 12,
+        category: "Poultry Feed",
+        image: "PF",
+        createdAt: "2024-01-05T00:00:00Z",
+      },
+      {
+        id: "3",
+        name: "Fish Meal Supplement",
+        description: "High-protein fish meal supplement for enhanced livestock nutrition",
+        price: 3200.00,
+        stock: 8,
+        category: "Supplements",
+        image: "FM",
+        createdAt: "2024-01-10T00:00:00Z",
+      },
+      {
+        id: "4",
+        name: "Mineral Mix for Cattle",
+        description: "Essential minerals and vitamins mix for cattle health and productivity",
+        price: 950.00,
+        stock: 67,
+        category: "Minerals",
+        image: "MM",
+        createdAt: "2024-01-12T00:00:00Z",
+      },
+      {
+        id: "5",
+        name: "Premium Dog Food",
+        description: "Complete premium nutrition formula for adult dogs",
+        price: 4200.00,
+        stock: 3,
+        category: "Pet Food",
+        image: "DF",
+        createdAt: "2024-01-15T00:00:00Z",
+      },
+    ]
+
+    // Store the animal feeds products only if no products exist
+    setStoredProducts(animalFeedsProducts)
+    return animalFeedsProducts
+  }
+
+  return []
 }
 
 const setStoredProducts = (products: Product[]): void => {
@@ -181,8 +286,55 @@ const setStoredProducts = (products: Product[]): void => {
 
 const getStoredOrders = (): Order[] => {
   if (typeof window === "undefined") return []
+
   const stored = localStorage.getItem("orders")
-  return stored ? JSON.parse(stored) : []
+
+  // If no stored orders, generate and store animal feeds orders
+  if (!stored) {
+    const animalFeedsOrders: Order[] = [
+      {
+        id: "ORD-001",
+        customerId: "CUST-001",
+        customerName: "Alice Johnson",
+        customerEmail: "alice@example.com",
+        items: [{ productId: "1", productName: "Premium Cattle Feed", quantity: 2, price: 2500.00 }],
+        total: 5000.00,
+        status: "delivered" as const,
+        createdAt: "2024-09-15T10:30:00Z",
+        updatedAt: "2024-09-20T14:20:00Z",
+      },
+      {
+        id: "ORD-002",
+        customerId: "CUST-002",
+        customerName: "Bob Smith",
+        customerEmail: "bob@example.com",
+        items: [
+          { productId: "2", productName: "Layer Poultry Feed", quantity: 3, price: 1800.00 },
+          { productId: "4", productName: "Mineral Mix for Cattle", quantity: 1, price: 950.00 },
+        ],
+        total: 6350.00,
+        status: "shipped" as const,
+        createdAt: "2024-09-25T14:15:00Z",
+        updatedAt: "2024-09-26T09:00:00Z",
+      },
+      {
+        id: "ORD-003",
+        customerId: "CUST-003",
+        customerName: "Carol White",
+        customerEmail: "carol@example.com",
+        items: [{ productId: "5", productName: "Premium Dog Food", quantity: 2, price: 4200.00 }],
+        total: 8400.00,
+        status: "processing" as const,
+        createdAt: "2024-09-28T16:45:00Z",
+        updatedAt: "2024-09-28T16:45:00Z",
+      },
+    ]
+
+    setStoredOrders(animalFeedsOrders)
+    return animalFeedsOrders
+  }
+
+  return JSON.parse(stored)
 }
 
 const setStoredOrders = (orders: Order[]): void => {
@@ -192,8 +344,17 @@ const setStoredOrders = (orders: Order[]): void => {
 
 const getStoredCustomers = (): Customer[] => {
   if (typeof window === "undefined") return []
+
   const stored = localStorage.getItem("customers")
-  return stored ? JSON.parse(stored) : []
+
+  // If no stored customers, generate and store mock data
+  if (!stored) {
+    const mockCustomers = generateMockCustomers()
+    setStoredCustomers(mockCustomers)
+    return mockCustomers
+  }
+
+  return JSON.parse(stored)
 }
 
 const setStoredCustomers = (customers: Customer[]): void => {
@@ -249,13 +410,13 @@ export const api = {
     await new Promise((resolve) => setTimeout(resolve, 300))
 
     return {
-      totalRevenue: 45678.9,
-      totalOrders: 234,
-      totalCustomers: 156,
-      lowStockItems: 3,
-      revenueChange: 12.5,
-      ordersChange: 8.3,
-      customersChange: 15.7,
+      totalRevenue: 18750.00,
+      totalOrders: 15,
+      totalCustomers: 8,
+      lowStockItems: 2,
+      revenueChange: 23.5,
+      ordersChange: 18.3,
+      customersChange: 12.7,
     }
   },
 
@@ -392,11 +553,11 @@ export const api = {
     await new Promise((resolve) => setTimeout(resolve, 800))
 
     const responses = [
-      "Based on your sales data, I recommend focusing on promoting products with higher margins this quarter.",
-      "Your inventory shows 3 items with low stock. Would you like me to generate a restock report?",
-      "Customer retention has improved by 15% this month. Great work on your engagement strategies!",
-      "I've analyzed your cash flow patterns. Consider adjusting payment terms with suppliers to improve liquidity.",
-      "Your top-selling category is Electronics. Consider expanding your product line in this area.",
+      "Based on your sales data, I recommend focusing on promoting high-margin cattle feed products this quarter.",
+      "Your inventory shows low stock on fish meal supplements. Would you like me to generate a restock report?",
+      "Customer retention has improved by 15% this month. Great work on your bulk buyer loyalty program!",
+      "I've analyzed your cash flow patterns. Consider adjusting payment terms with feed suppliers to improve liquidity.",
+      "Your top-selling category is Cattle Feed. Consider expanding your product line in this high-demand area.",
     ]
 
     return responses[Math.floor(Math.random() * responses.length)]

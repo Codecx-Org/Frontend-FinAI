@@ -29,7 +29,7 @@ export default function NewProductPage() {
     unit: "unit",
     stock: "",
     category: "",
-    image: "/placeholder.svg?height=400&width=400",
+    image: "NEW", // Default abbreviation for new products
   })
 
   useEffect(() => {
@@ -121,7 +121,7 @@ export default function NewProductPage() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-3 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="price">Price (KSH)</Label>
                   <Input
@@ -133,6 +133,20 @@ export default function NewProductPage() {
                     onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                     required
                     disabled={isSubmitting}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="stock">Stock Quantity</Label>
+                  <Input
+                    id="stock"
+                    type="number"
+                    placeholder="0"
+                    value={formData.stock}
+                    onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
+                    required
+                    disabled={isSubmitting}
+                    min="0"
                   />
                 </div>
 
@@ -149,39 +163,38 @@ export default function NewProductPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="stock">Stock Quantity</Label>
-                  <Input
-                    id="stock"
-                    type="number"
-                    placeholder="0"
-                    value={formData.stock}
-                    onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
-                    required
-                    disabled={isSubmitting}
-                  />
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="image">Product Code (Abbreviation)</Label>
+                <Input
+                  id="image"
+                  placeholder="e.g., CF, PF, FM"
+                  value={formData.image}
+                  onChange={(e) => setFormData({ ...formData, image: e.target.value.toUpperCase().slice(0, 3) })}
+                  required
+                  disabled={isSubmitting}
+                  maxLength={3}
+                />
+                <p className="text-sm text-muted-foreground">2-3 letter code for this product</p>
+              </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="category">Category</Label>
-                  <Select
-                    value={formData.category}
-                    onValueChange={(value) => setFormData({ ...formData, category: value })}
-                    disabled={isSubmitting}
-                  >
-                    <SelectTrigger id="category">
-                      <SelectValue placeholder="Select a category" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {categories.map((category) => (
-                        <SelectItem key={category} value={category}>
-                          {category}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="category">Category</Label>
+                <Select
+                  value={formData.category}
+                  onValueChange={(value) => setFormData({ ...formData, category: value })}
+                  disabled={isSubmitting}
+                >
+                  <SelectTrigger id="category">
+                    <SelectValue placeholder="Select a category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categories.map((category) => (
+                      <SelectItem key={category} value={category}>
+                        {category}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="flex gap-3 pt-4">

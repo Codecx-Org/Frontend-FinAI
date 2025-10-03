@@ -6,26 +6,26 @@ import { Lightbulb, TrendingUp, AlertCircle, Target } from "lucide-react"
 const suggestions = [
   {
     icon: TrendingUp,
-    title: "Optimize Pricing Strategy",
-    description: "Your Electronics category has 23% higher margins. Consider expanding this product line.",
+    title: "Expand Cattle Feed Production",
+    description: "Cattle Feed category shows 35% higher margins. Consider increasing production capacity for this high-demand product line.",
     priority: "high",
   },
   {
     icon: AlertCircle,
-    title: "Inventory Alert",
-    description: "3 products are running low on stock. Restock now to avoid lost sales opportunities.",
+    title: "Low Stock Alert",
+    description: "Fish Meal Supplement and Premium Dog Food are running low. Restock now to meet upcoming seasonal demand.",
     priority: "medium",
   },
   {
     icon: Target,
-    title: "Customer Retention",
-    description: "VIP customers generate 45% of revenue. Launch a loyalty program to increase retention.",
+    title: "Customer Retention Program",
+    description: "Bulk buyers represent 60% of revenue. Launch a loyalty program to improve retention and increase order frequency.",
     priority: "high",
   },
   {
     icon: Lightbulb,
     title: "Seasonal Opportunity",
-    description: "Sales typically increase 30% in Q4. Start preparing inventory and marketing campaigns.",
+    description: "Q4 typically shows 40% increase in livestock feed demand. Prepare inventory and consider bulk pricing for large orders.",
     priority: "low",
   },
 ]
