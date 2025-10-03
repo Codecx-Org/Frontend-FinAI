@@ -1,6 +1,6 @@
 // Mock API layer simulating Medusa.js-style endpoints
 
-import type { User, AuthResponse, Product, Order, Customer, DashboardStats, SalesData } from "./types"
+import type { User, AuthResponse, Product, Order, Customer, DashboardStats, SalesData, PaymentMethod, MicroloanApplication, CreditScore } from "./types"
 
 // Mock authentication token
 const MOCK_TOKEN = "mock-jwt-token-12345"
@@ -400,5 +400,109 @@ export const api = {
     ]
 
     return responses[Math.floor(Math.random() * responses.length)]
+  },
+
+  // Payment Methods
+  getPaymentMethods: async (): Promise<PaymentMethod[]> => {
+    await new Promise((resolve) => setTimeout(resolve, 300))
+    return [
+      {
+        id: "pm-1",
+        type: "mpesa",
+        phoneNumber: "+254712345678",
+        accountName: "John Doe",
+        isDefault: true,
+        status: "active",
+      },
+      {
+        id: "pm-2",
+        type: "airtel_money",
+        phoneNumber: "+254712345679",
+        accountName: "Jane Smith",
+        isDefault: false,
+        status: "inactive",
+      },
+    ]
+  },
+
+  connectPaymentMethod: async (type: 'mpesa' | 'airtel_money', phoneNumber: string, accountName: string): Promise<PaymentMethod> => {
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+    return {
+      id: `pm-${Date.now()}`,
+      type,
+      phoneNumber,
+      accountName,
+      isDefault: false,
+      status: "pending",
+    }
+  },
+
+  // Credit & Microloans
+  getCreditScore: async (): Promise<CreditScore> => {
+    await new Promise((resolve) => setTimeout(resolve, 500))
+    return {
+      overall: 85,
+      businessPerformance: 90,
+      paymentHistory: 80,
+      creditUtilization: 75,
+      factors: {
+        positive: [
+          "Consistent revenue growth",
+          "Good payment history",
+          "Strong customer base",
+        ],
+        negative: [
+          "High credit utilization",
+          "Limited business history",
+        ],
+      },
+      recommendations: [
+        "Reduce credit utilization below 50%",
+        "Maintain consistent payment patterns",
+        "Expand customer base",
+      ],
+      lastUpdated: new Date().toISOString(),
+    }
+  },
+
+  applyForMicroloan: async (application: Omit<MicroloanApplication, "id" | "status" | "creditScore" | "appliedAt">): Promise<MicroloanApplication> => {
+    await new Promise((resolve) => setTimeout(resolve, 2000))
+    const creditScore = await api.getCreditScore()
+
+    // Simple approval logic based on credit score and amount
+    const maxAmount = creditScore.overall > 80 ? 50000 : creditScore.overall > 60 ? 25000 : 10000
+    const approved = application.amount <= maxAmount
+
+    const interestRate = approved ? (creditScore.overall > 80 ? 12 : 15) : 0
+    const monthlyPayment = approved ? (application.amount * (1 + interestRate / 100)) / application.term : 0
+
+    return {
+      id: `loan-${Date.now()}`,
+      ...application,
+      status: approved ? "approved" : "rejected",
+      creditScore: creditScore.overall,
+      approvedAmount: approved ? application.amount : undefined,
+      interestRate: approved ? interestRate : undefined,
+      monthlyPayment: approved ? monthlyPayment : undefined,
+      appliedAt: new Date().toISOString(),
+    }
+  },
+
+  getMicroloanApplications: async (): Promise<MicroloanApplication[]> => {
+    await new Promise((resolve) => setTimeout(resolve, 300))
+    return [
+      {
+        id: "loan-001",
+        amount: 25000,
+        purpose: "Inventory expansion",
+        term: 12,
+        status: "approved",
+        creditScore: 85,
+        approvedAmount: 25000,
+        interestRate: 12,
+        monthlyPayment: 2250,
+        appliedAt: "2024-01-15T10:00:00Z",
+      },
+    ]
   },
 }

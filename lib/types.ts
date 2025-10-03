@@ -95,6 +95,41 @@ export interface AIMessage {
   timestamp: string
 }
 
+export interface PaymentMethod {
+  id: string
+  type: 'mpesa' | 'airtel_money' | 'card'
+  phoneNumber?: string
+  accountName?: string
+  isDefault: boolean
+  status: 'active' | 'inactive' | 'pending'
+}
+
+export interface MicroloanApplication {
+  id: string
+  amount: number
+  purpose: string
+  term: number // months
+  status: 'pending' | 'approved' | 'rejected' | 'disbursed'
+  creditScore: number
+  approvedAmount?: number
+  interestRate?: number
+  monthlyPayment?: number
+  appliedAt: string
+}
+
+export interface CreditScore {
+  overall: number
+  businessPerformance: number
+  paymentHistory: number
+  creditUtilization: number
+  factors: {
+    positive: string[]
+    negative: string[]
+  }
+  recommendations: string[]
+  lastUpdated: string
+}
+
 export interface BusinessType {
   id: string
   name: string
