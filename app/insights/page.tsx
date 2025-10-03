@@ -3,20 +3,23 @@ import { MetricCard } from "@/components/insights/metric-card"
 import { CashFlowChart } from "@/components/insights/cash-flow-chart"
 import { InventoryTurnoverChart } from "@/components/insights/inventory-turnover-chart"
 import { CustomerGrowthChart } from "@/components/insights/customer-growth-chart"
-import { AISuggestions } from "@/components/insights/ai-suggestions"
+import { AIBusinessHealthDashboard } from "@/components/insights/ai-business-health-dashboard"
 import { DollarSign, TrendingUp, Percent, Target } from "lucide-react"
 
 export default function InsightsPage() {
   return (
     <DashboardLayout>
-      <div className="space-y-6">
+      <div className="space-y-8">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold">Financial Insights</h1>
-          <p className="text-muted-foreground">Deep dive into your business performance and opportunities</p>
+          <h1 className="text-3xl font-bold">Business Intelligence Center</h1>
+          <p className="text-muted-foreground">AI-powered insights and intelligent decision-making tools</p>
         </div>
 
-        {/* Key Metrics */}
+        {/* AI Business Health Dashboard - Featured prominently */}
+        <AIBusinessHealthDashboard />
+
+        {/* Key Metrics Summary */}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <MetricCard
             title="Profit Margin"
@@ -48,7 +51,7 @@ export default function InsightsPage() {
           />
         </div>
 
-        {/* Charts */}
+        {/* Detailed Analytics Charts */}
         <div className="grid gap-6 lg:grid-cols-2">
           <CashFlowChart />
           <InventoryTurnoverChart />
@@ -82,9 +85,6 @@ export default function InsightsPage() {
             </div>
           </div>
         </div>
-
-        {/* AI Suggestions */}
-        <AISuggestions />
       </div>
     </DashboardLayout>
   )
